@@ -2,7 +2,7 @@ namespace MineSweeper.Core
 {
     public class Tile
     {
-        public int Index { get; set; }
+        //public int Index { get; set; }
 
         public bool IsMine { get; set; }
 

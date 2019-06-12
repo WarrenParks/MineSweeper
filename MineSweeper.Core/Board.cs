@@ -26,6 +26,7 @@ namespace MineSweeper.Core
 
             var randomNumber = new Random();
 
+            // Add the mines
             for (var x = 0; x < numberOfMines; x++)
             {
                 var index = randomNumber.Next(this.Tiles.Length);
@@ -40,46 +41,25 @@ namespace MineSweeper.Core
             }
         }
 
+        public bool CheckValidPosition(int x, int y)
+        {
+            return (x >= 0 && x < this.width && y >= 0 && y < this.height);
+        }
+
         public IEnumerable<Tile> GetSurroundingTiles(int index)
         {
             var surroundingTiles = new List<Tile>();
 
             var x = (index) % width;
             var y = (index) / width;
-            Console.WriteLine($"x: {x}, y: {y}, index: {index}, width: {width}, height: {height}");
-
-            // // // top left
-            // // if (index - width < 0)
-            // // {
-
-            // // }
-
-            // // // Right
-            // // if (x + 1 < this.width)
-            // // {
-
-            // //     surroundingTiles.Add(this.Tiles[index + 1]);
-            // // }
-
-            // // // Bottom
-            // // if (y + 1 < this.height)
-            // // {
-            // //     surroundingTiles.Add(this.Tiles[index + width]);
-            // // }
-
-            // // // Bottom Right
-            // // if (x + 1 < this.width && y + 1 < height)
-            // // {
-            // //     surroundingTiles.Add(this.Tiles[index + width + 1]);
-            // // }
 
             // Get all surrounding tiles 
             for (var i = x - 1; i <= x + 1; i++)
             {
                 for (var j = y - 1; j <= y + 1; j++)
                 {
-                    // check if cell is on board
-                    if (this.CheckValidPosition(i, j))
+                    // check if cell is on board and that it isn't original tile.
+                    if (this.CheckValidPosition(i, j) && index != (i + j * width))
                     {
                         surroundingTiles.Add(this.Tiles[i + j * width]);
                     }
@@ -91,10 +71,6 @@ namespace MineSweeper.Core
 
         public IEnumerable<int> GetTilesToShow(int index)
         {
-            //var max = this.Tiles.Length;
-            var wasHere = new bool[width, height];
-            var correctPath = new bool[width, height]; // The solution to the maze
-
             var tiles = new List<int>();
 
             if (!this.Tiles[index].IsVisible)
@@ -112,67 +88,31 @@ namespace MineSweeper.Core
             var x = (index) % width;
             var y = (index) / width;
 
-            // // if (this.Tiles[index].IsFlippable)
-            // // {
-            // //     flippableTiles.Add(index);
-            // // }
-
-            // Up
-            // // var flippableIndex = index - width;
-            // // if (y - 1 >= 0 && !flippableTiles.Contains(index - width) && this.Tiles[index - width].IsFlippable)
-            // // {
-            // //     flippableTiles.Add(index - width);
-            // //     this.GetRecursiveFlippableTiles(index - width, flippableTiles);
-            // // }
-
-            // // // Right
-            // // if (x + 1 < width && !flippableTiles.Contains(index + 1))
-            // // {
-            // //     flippableTiles.Add(index + 1);
-            // //     this.GetRecursiveFlippableTiles(index + 1, flippableTiles);
-            // // }
-
-            // // // Down
-            // // if (y + 1 < height && !flippableTiles.Contains(index + width))
-            // // {
-            // //     flippableTiles.Add(index + width);
-            // //     this.GetRecursiveFlippableTiles(index + width, flippableTiles);
-            // // }
-
-            // // // Left
-            // // if (x - 1 >= 0 && !flippableTiles.Contains(index - 1))
-            // // {
-            // //     flippableTiles.Add(index - 1);
-            // //     this.GetRecursiveFlippableTiles(index - 1, flippableTiles);
-            // // }
-
-            // Get all surrounding tiles 
+            // Get surrounding tiles (+(-)1 all around itself)
             for (var i = x - 1; i <= x + 1; i++)
             {
                 for (var j = y - 1; j <= y + 1; j++)
                 {
-                    var arrayIndex = i + j * this.width;
+                    // get array index from current x(i) y(j) positions
+                    var currentIndex = i + j * this.width;
+
                     // check if cell is on board
-                    if (this.CheckValidPosition(i, j) && 
-                        !this.Tiles[arrayIndex].IsMine && 
-                        !flippableTiles.Contains(arrayIndex))
+                    // it's not a mine
+                    // and we haven't already added this to tiles to flip
+                    if (this.CheckValidPosition(i, j) &&
+                        !this.Tiles[currentIndex].IsMine &&
+                        !flippableTiles.Contains(currentIndex))
                     {
-                        flippableTiles.Add(arrayIndex);
+                        flippableTiles.Add(currentIndex);
 
                         // only look for more flippable if this was a 0 
-                        if (this.Tiles[arrayIndex].AdjacentMineCount == 0)
+                        if (this.Tiles[currentIndex].AdjacentMineCount == 0)
                         {
-                            this.GetTilesToShowRecursive(arrayIndex, flippableTiles);
+                            this.GetTilesToShowRecursive(currentIndex, flippableTiles);
                         }
-                        //surroundingTiles.Add(this.Tiles[i + j * width]);
                     }
                 }
             }
-        }
-
-        public bool CheckValidPosition(int x, int y)
-        {
-            return (x >= 0 && x < this.width && y >= 0 && y < this.height);
         }
     }
 }
