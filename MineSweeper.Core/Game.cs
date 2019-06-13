@@ -89,11 +89,16 @@ namespace MineSweeper.Core
         public void FlagTile()
         {
             this.CurrentTile.Flagged = true;
+
+            // todo: this logic is not correct. Just because you flagged number as mines doesn't mean it's true.
+            if (this.FlagCount == this.MineCount)
+            {
+                this.Status = Status.Won;
+            }
         }
 
         public void FlipTile()
         {
-            ////this.FlipTile(this.CurrentTile);
             // If Bomb Lose
             if (this.CurrentTile.IsMine)
             {

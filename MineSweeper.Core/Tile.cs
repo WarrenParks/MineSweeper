@@ -36,7 +36,5 @@ namespace MineSweeper.Core
                 return tileDisplay;
             }
         }
-
-        //public bool IsFlippable { get => !IsVisible; }
     }
 }

@@ -37,6 +37,15 @@ namespace MineSweeper
                 Console.WriteLine();
                 ShowDebugInfo(game.VisibleCount, numberOfColumns * numberOfMines);
             }
+
+            if (game.Status == Status.Won) 
+            {
+                Console.Clear();
+                OutputStats(game.FlagCount, game.MineCount);
+                Console.WriteLine("Congratulations. You Won!!");
+                Console.WriteLine();
+                ShowDebugInfo(game.VisibleCount, numberOfColumns * numberOfMines);
+            }
         }
 
         private static void OutputStats(int numberOfFlags, int numberOfMines)
@@ -109,15 +118,19 @@ namespace MineSweeper
                         case TileDisplay.Initial:
                             Console.Write($"[ ] ");
                             break;
+
                         case TileDisplay.Empty:
                             Console.Write("    ");
                             break;
+
                         case TileDisplay.Mine:
                             Console.Write("[M] ");
                             break;
+
                         case TileDisplay.Flag:
                             Console.Write("[F] ");
                             break;
+
                         case TileDisplay.Number:
                             Console.Write($"[{tile.AdjacentMineCount}] ");
                             break;
@@ -125,6 +138,7 @@ namespace MineSweeper
 
                     Console.ResetColor();
                 }
+
                 Console.WriteLine();
                 Console.WriteLine();
             }

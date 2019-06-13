@@ -73,16 +73,10 @@ namespace MineSweeper.UnitTests.MineSweeper.Core
             {
                 var game = new Game(1, 1, 1);
                 game.Start();
-                //game.CurrentPosition = new Point(1, 1);
 
                 game.FlipTile();
 
                 Assert.AreEqual(Status.GameOver, game.Status);
-
-                // foreach (var actual in game.Board.Tiles)
-                // {
-                //     Assert.AreEqual(expectedTileDisplay, actual.TileDisplay);
-                // }
             }
         }
 
@@ -128,6 +122,17 @@ namespace MineSweeper.UnitTests.MineSweeper.Core
 
                 var actualTileDisplay = game.Board.Tiles[1 + 1 * 5].TileDisplay;
                 Assert.AreEqual(expectedTileDisplay, actualTileDisplay);
+            }
+
+            [TestMethod]
+            public void ItSetsGameStatusToWonOnLastMine() 
+            {
+                var game = new Game(1, 1, 1);
+                game.Start();
+
+                game.FlagTile();
+
+                Assert.AreEqual(Status.Won, game.Status);
             }
         }
 
